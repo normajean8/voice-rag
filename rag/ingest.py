@@ -1,8 +1,7 @@
 from pypdf import PdfReader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from sentence_transformers import SentenceTransformer
-import faiss
-import numpy as np
+from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_community.vectorstores import FAISS
 
 # Load PDF
 reader = PdfReader("data/manual.pdf")
@@ -24,13 +23,11 @@ chunks = splitter.split_text(text)
 print("Chunks created:", len(chunks))
 
 # Create embeddings
-model = SentenceTransformer("all-MiniLM-L6-v2")
+embeddings = HuggingFaceEmbeddings(
+    model_name="sentence-transformers/all-MiniLM-L6-v2"
+)
 
-embeddings = model.encode(chunks)
+# Create FAISS vector store
+vectorstore = FAISS.from_texts(chunks, embeddings)
 
-# Create FAISS index
-dimension = embeddings.shape[1]
-index = faiss.IndexFlatL2(dimension)
-index.add(np.array(embeddings))
-
-print("FAISS index ready with", index.ntotal, "vectors")
+print("Vector database ready!")
