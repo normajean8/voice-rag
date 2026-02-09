@@ -47,6 +47,8 @@ def keyword_search(chunks, query, k=3):
 
 while True:
     query = input("Ask: ")
+    speak("Let me check that for you.")
+
     partial_query = " ".join(query.split()[:3])
 
     print("\n[Prefetching using partial query...]\n")

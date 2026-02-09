@@ -4,11 +4,17 @@ import os
 import uuid
 
 def speak(text: str):
-    filename = f"voice_{uuid.uuid4().hex}.mp3"
+    sentences = text.split(". ")
 
-    tts = gTTS(text=text, lang="en")
-    tts.save(filename)
+    for sentence in sentences:
+        if not sentence.strip():
+            continue
 
-    playsound(filename)
-    os.remove(filename)
+        filename = f"voice_{uuid.uuid4().hex}.mp3"
+
+        tts = gTTS(text=sentence, lang="en")
+        tts.save(filename)
+
+        playsound(filename)
+        os.remove(filename)
 
